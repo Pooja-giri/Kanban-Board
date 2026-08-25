@@ -23,7 +23,7 @@ const Dashboard = lazy(() =>
 );
 
 const Tasks = lazy(() =>
-  import("./pages/Tasks/Tasks")
+  import("./pages/tasks/Tasks")
 );
 
 function App() {
