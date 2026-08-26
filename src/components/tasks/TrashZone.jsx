@@ -1,16 +1,10 @@
 import { useDroppable } from "@dnd-kit/core";
-
-import {
-  Box,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Paper, Typography, useTheme } from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 function TrashZone() {
-  const {
-    setNodeRef,
-    isOver,
-  } = useDroppable({
+  const theme = useTheme();
+  const { setNodeRef, isOver } = useDroppable({
     id: "trash",
   });
 
@@ -19,66 +13,70 @@ function TrashZone() {
       ref={setNodeRef}
       sx={{
         position: "fixed",
-        right: {
-          xs: 16,
-          sm: 24,
+        right: { xs: 20, sm: 32 },
+        bottom: { xs: 20, sm: 32 },
+        zIndex: 1400,
+        pointerEvents: "auto",
+        animation: "slideInUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        "@keyframes slideInUp": {
+          "0%": {
+            transform: "translateY(100px) scale(0.6)",
+            opacity: 0,
+          },
+          "100%": {
+            transform: "translateY(0) scale(1)",
+            opacity: 1,
+          },
         },
-        bottom: {
-          xs: 16,
-          sm: 24,
-        },
-        zIndex: 1200,
       }}
     >
       <Paper
-        elevation={6}
+        elevation={10}
+        className={isOver ? "pulse-trash" : ""}
         sx={{
-          width: {
-            xs: 70,
-            sm: 90,
-          },
-          height: {
-            xs: 70,
-            sm: 90,
-          },
+          width: { xs: 80, sm: 96 },
+          height: { xs: 80, sm: 96 },
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: 3,
-          transition: "all 0.2s ease",
-
+          borderRadius: 4,
+          transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
           backgroundColor: isOver
-            ? "error.main"
-            : "background.paper",
-
+            ? "#DC2626"
+            : theme.palette.mode === "dark"
+            ? "#1F2937"
+            : "#FFFFFF",
           color: isOver
-            ? "error.contrastText"
-            : "error.main",
-
-          transform: isOver
-            ? "scale(1.1)"
-            : "scale(1)",
+            ? "#FFFFFF"
+            : "#EF4444",
+          border: "2px dashed",
+          borderColor: isOver ? "#FFFFFF" : "#EF4444",
+          transform: isOver ? "scale(1.15) rotate(-3deg)" : "scale(1)",
+          boxShadow: isOver
+            ? "0 15px 30px rgba(220, 38, 38, 0.5)"
+            : "0 10px 25px rgba(239, 68, 68, 0.25)",
         }}
       >
-        <Box
-          component="span"
+        <DeleteForeverIcon
           sx={{
-            fontSize: {
-              xs: "28px",
-              sm: "34px",
-            },
-            lineHeight: 1,
+            fontSize: { xs: 32, sm: 40 },
+            transition: "transform 0.2s ease",
+            transform: isOver ? "scale(1.2)" : "scale(1)",
           }}
-        >
-          🗑️
-        </Box>
+        />
 
         <Typography
           variant="caption"
-          fontWeight="bold"
+          fontWeight={800}
+          sx={{
+            fontSize: { xs: "0.65rem", sm: "0.75rem" },
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            mt: 0.2,
+          }}
         >
-          Delete
+          {isOver ? "Release" : "Trash"}
         </Typography>
       </Paper>
     </Box>

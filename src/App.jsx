@@ -1,54 +1,27 @@
 import { lazy, Suspense } from "react";
-
-import {
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AppLayout from "./components/common/AppLayout";
 import PageLoader from "./components/common/PageLoader";
 
-const Login = lazy(() =>
-  import("./pages/Login/Login")
-);
-
-const Register = lazy(() =>
-  import("./pages/Register/Register")
-);
-
-const Dashboard = lazy(() =>
-  import("./pages/Dashboard/Dashboard")
-);
-
-const Tasks = lazy(() =>
-  import("./pages/tasks/Tasks")
-);
+const Login = lazy(() => import("./pages/Login/Login"));
+const Register = lazy(() => import("./pages/Register/Register"));
+const AuthSuccess = lazy(() => import("./pages/AuthSuccess"));
+const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
+const Tasks = lazy(() => import("./pages/tasks/Tasks"));
 
 function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Navigate
-              to="/login"
-              replace
-            />
-          }
-        />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        {/* OAuth callback / success handler */}
+        <Route path="/auth-success" element={<AuthSuccess />} />
+        <Route path="/auth/callback" element={<AuthSuccess />} />
 
         <Route
           element={
@@ -57,26 +30,11 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route
-            path="/dashboard"
-            element={<Dashboard />}
-          />
-
-          <Route
-            path="/tasks"
-            element={<Tasks />}
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/tasks" element={<Tasks />} />
         </Route>
 
-        <Route
-          path="*"
-          element={
-            <Navigate
-              to="/login"
-              replace
-            />
-          }
-        />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Suspense>
   );
